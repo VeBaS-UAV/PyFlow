@@ -24,7 +24,8 @@ from PyFlow.UI.Utils.stylesheet import Colors
 
 def rst2html(rst):
     if rst is not None:
-        return core.publish_string(rst, writer_name="html").decode("utf-8")
+        return "rst2html"
+        # return core.publish_string(rst, writer_name="html").decode("utf-8")
     return ""
 
 

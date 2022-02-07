@@ -699,7 +699,7 @@ class UINodeBase(QGraphicsWidget, IPropertiesViewSupport, IUINode):
         self.update()
 
     def onComputed(self, *args, **kwargs):
-        self.setToolTip("%s\nComputingTime: %s"%(rst2html(self.description()),self._rawNode._computingTime))
+        # self.setToolTip("%s\nComputingTime: %s"%(rst2html(self.description()),self._rawNode._computingTime))
         self.update()
 
     def toggleCollapsed(self):
