@@ -21,6 +21,7 @@ import sys
 import subprocess
 import json
 import pkgutil
+import traceback
 import uuid
 import shutil
 from string import ascii_letters
@@ -94,7 +95,7 @@ class PyFlow(QMainWindow):
     newFileExecuted = QtCore.Signal(bool)
     fileBeenLoaded = QtCore.Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, graphManager=GraphManagerSingleton()):
         super(PyFlow, self).__init__(parent=parent)
         self._modified = False
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -104,7 +105,7 @@ class PyFlow(QMainWindow):
         self.setWindowTitle(winTitle())
         self.undoStack = QUndoStack(self)
         self.setContentsMargins(1, 1, 1, 1)
-        self.graphManager = GraphManagerSingleton()
+        self.graphManager = graphManager
         self.canvasWidget = BlueprintCanvasWidget(self.graphManager.get(), self)
         self.canvasWidget.setObjectName("canvasWidget")
         self.setCentralWidget(self.canvasWidget)
@@ -569,11 +570,11 @@ class PyFlow(QMainWindow):
         QMainWindow.closeEvent(self, event)
 
     @staticmethod
-    def instance(parent=None, software=""):
+    def instance(parent=None, software="", graphManager=GraphManagerSingleton()):
         assert(software != ""), "Invalid arguments. Please pass you software name as second argument!"
         settings = ConfigManager().getSettings("APP_STATE")
 
-        instance = PyFlow(parent)
+        instance = PyFlow(parent, graphManager=graphManager)
         instance.currentSoftware = software
         SessionDescriptor().software = instance.currentSoftware
 
@@ -592,6 +593,7 @@ class PyFlow(QMainWindow):
             INITIALIZE(additionalPackageLocations=extraPackagePaths, software=software)
         except Exception as e:
             QMessageBox.critical(None, "Fatal error", str(e))
+            print(traceback.format_exc())
             return
 
         instance.startMainLoop()
