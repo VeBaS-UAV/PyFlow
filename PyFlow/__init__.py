@@ -213,6 +213,7 @@ def INITIALIZE(additionalPackageLocations=[], software=""):
                 __PACKAGES[modname] = package
                 __PACKAGE_PATHS[modname] = os.path.normpath(mod.__path__[0])
         except Exception as e:
+            print(traceback.format_exc())
             QMessageBox.critical(None, str("Fatal error"), "Error On Module %s :\n%s" % (modname, str(e)))
             continue
 
