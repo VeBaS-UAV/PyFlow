@@ -566,9 +566,11 @@ def push(start_from):
     """
     if not len(start_from.affects) == 0:
         start_from.setDirty()
-        for i in start_from.affects:
-            i.setDirty()
-            push(i)
+
+        if start_from.optionEnabled(PinOptions.AffectsDirtyForward):
+            for i in start_from.affects:
+                i.setDirty()
+                push(i)
 
 
 def extractDigitsFromEndOfString(string):
@@ -773,6 +775,8 @@ class PinOptions(Flag):
     Storable = auto()  #: Determines if pin data can be stored when pin serialized
     AllowAny = auto()  #: Special flag that allow a pin to be :class:`~PyFlow.Packages.PyFlowBase.Pins.AnyPin.AnyPin`, which means non typed without been marked as error. By default a :py:class:`PyFlow.Packages.PyFlowBase.Pins.AnyPin.AnyPin` need to be initialized with some data type, other defined pin. This flag overrides that. Used in lists and non typed nodes
     DictElementSupported = auto()  #: Dicts are constructed with :class:`DictElement` objects. So dict pins will only allow other dicts until this flag enabled. Used in :class:`~PyFlow.Packages.PyFlowBase.Nodes.makeDict` node
+
+    AffectsDirtyForward = auto() #: determined if dirty bit will be forwarded to affected pins
 
 
 class StructureType(IntEnum):

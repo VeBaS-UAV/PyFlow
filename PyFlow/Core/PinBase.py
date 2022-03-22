@@ -1000,8 +1000,11 @@ class PinBase(IPin):
         if self.isExec():
             return
         self.dirty = True
-        for i in self.affects:
-            i.dirty = True
+
+        if self.optionEnabled(PinOptions.AffectsDirtyForward):
+            for i in self.affects:
+                i.dirty = True
+
         self.markedAsDirty.send()
 
     def hasConnections(self):
