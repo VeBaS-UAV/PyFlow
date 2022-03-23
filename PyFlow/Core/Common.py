@@ -317,8 +317,9 @@ def canConnectPins(src, dst):
     if src.direction == PinDirection.Input:
         src, dst = dst, src
 
-    if cycleCheck(src, dst):
-        return False
+    if src.optionEnabled(PinOptions.AllowCycleConnection) is False and dst.optionEnabled(PinOptions.AllowCycleConnection) is False:
+        if cycleCheck(src, dst):
+            return False
 
     if src.isExec() and dst.isExec():
         return True
@@ -777,6 +778,7 @@ class PinOptions(Flag):
     DictElementSupported = auto()  #: Dicts are constructed with :class:`DictElement` objects. So dict pins will only allow other dicts until this flag enabled. Used in :class:`~PyFlow.Packages.PyFlowBase.Nodes.makeDict` node
 
     AffectsDirtyForward = auto() #: determined if dirty bit will be forwarded to affected pins
+    AllowCycleConnection = auto() #: define
 
 
 class StructureType(IntEnum):
