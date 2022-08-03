@@ -232,5 +232,7 @@ class compound(NodeBase):
     def compute(self, *args, **kwargs):
         # put data from inner graph pins to outer compound node output companions
         for outputPin, innerPin in self.__outputsMap.items():
+            # if innerPin.dirty == False:
+                # continue
             outputPin.setData(innerPin.getData())
             outputPin.setClean()

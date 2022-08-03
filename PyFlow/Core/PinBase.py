@@ -140,10 +140,9 @@ class PinBase(IPin):
         # This is for to be able to connect pins by location on node
         self.pinIndex = 0
         if direction == PinDirection.Input:
-            self.pinIndex = len(self.owningNode().orderedInputs)
+            self.pinIndex = self.name
         if direction == PinDirection.Output:
-            self.pinIndex = len(self.owningNode().orderedOutputs)
-
+            self.pinIndex = self.name
         self.description = "{} instance".format(self.dataType)
 
     @property
@@ -470,6 +469,7 @@ class PinBase(IPin):
         if name == self.name:
             return False
         self.name = self.owningNode().getUniqPinName(name)
+        self.pinIndex = self.name
         self.nameChanged.send(self.name)
         return True
 
@@ -539,6 +539,8 @@ class PinBase(IPin):
         :param data: Data to be set
         :type data: object
         """
+        if isinstance(data, str):
+            pass
         if self.super is None:
             return
         try:
@@ -639,22 +641,22 @@ class PinBase(IPin):
             self.owningNode().pinsCreationOrder.pop(self.uid)
 
         # Fix pin indexes on owning node
-        if self.optionEnabled(PinOptions.Dynamic):
-            # sort owning node pins indexes
-            index = 1
-            if self.direction == PinDirection.Input:
-                for inputPin in self.owningNode().orderedInputs.values():
-                    if inputPin == self:
-                        continue
-                    inputPin.pinIndex = index
-                    index += 1
-            index = 1
-            if self.direction == PinDirection.Output:
-                for outputPin in self.owningNode().orderedOutputs.values():
-                    if outputPin == self:
-                        continue
-                    outputPin.pinIndex = index
-                    index += 1
+        # if self.optionEnabled(PinOptions.Dynamic):
+        #     # sort owning node pins indexes
+        #     index = 1
+        #     if self.direction == PinDirection.Input:
+        #         for inputPin in self.owningNode().orderedInputs.values():
+        #             if inputPin == self:
+        #                 continue
+        #             inputPin.pinIndex = index
+        #             index += 1
+        #     index = 1
+        #     if self.direction == PinDirection.Output:
+        #         for outputPin in self.owningNode().orderedOutputs.values():
+        #             if outputPin == self:
+        #                 continue
+        #             outputPin.pinIndex = index
+        #             index += 1
         self.killed.send(self)
         clearSignal(self.killed)
 

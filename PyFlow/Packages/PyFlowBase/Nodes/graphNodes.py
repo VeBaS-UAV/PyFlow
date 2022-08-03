@@ -61,6 +61,8 @@ class graphInputs(NodeBase):
     def compute(self, *args, **kwargs):
         for o in self.outputs.values():
             for i in o.affected_by:
+                # if i.dirty == False:
+                    # continue
                 if len(i.affected_by)>0:
                     for e in i.affected_by:
                         o.setData(e.getData())
@@ -136,3 +138,4 @@ class graphOutputs(NodeBase):
                 o.setDirty()
         if compoundNode:
             compoundNode.processNode()
+            pass

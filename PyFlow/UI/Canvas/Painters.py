@@ -657,6 +657,10 @@ class ConnectionPainter(object):
         xDistance = (p2.x() + offset2) - (p1.x() + offset1)
         midPointY = p2.y() + ((p1.y() - p2.y()) / 2.0) + vOffsetSShape
 
+        vOffset = 100
+        hOffsetL = -xDistance
+        hOffsetR = -xDistance/2
+
         path = []
         path.append(p1)
         if xDistance > 0 or sameSide == -1:

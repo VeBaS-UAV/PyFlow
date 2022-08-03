@@ -12,11 +12,15 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
+import os
+os.environ['QT_API'] = 'pyside2'  # tells QtPy to use PySide2
+# os.environ['QT_API'] = 'pyqt5'  # tells QtPy to use PySide2
 
 import sys
 from PyFlow.App import PyFlow
 from Qt.QtWidgets import QApplication
 
+import robinson.components
 
 def main():
     app = QApplication(sys.argv)

@@ -208,7 +208,11 @@ class GraphBase(ISerializable):
                 nodeKwargs['var'] = self._vars[uuid.UUID(nodeJson['varUid'])]
             nodeJson['owningGraphName'] = self.name
             node = getRawNodeInstance(nodeJson['type'], packageName=nodeJson['package'], libName=nodeJson['lib'], *nodeArgs, **nodeKwargs)
-            self.addNode(node, nodeJson)
+            try:
+                self.addNode(node, nodeJson)
+            except Exception as e:
+                print("Could not create node")
+                print(e)
 
         # restore connection
         for nodeJson in jsonData['nodes']:
@@ -233,6 +237,7 @@ class GraphBase(ISerializable):
                     try:
                         rhsPin = rhsNode.orderedInputs[linkData["inPinId"]]
                     except Exception as e:
+                        print("rhsPin not found {0}".format(str(linkData)))
                         continue
 
                     if not arePinsConnected(lhsPin, rhsPin):

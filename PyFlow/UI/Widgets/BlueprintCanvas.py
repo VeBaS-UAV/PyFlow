@@ -1157,23 +1157,27 @@ class BlueprintCanvas(CanvasBase):
                 for node in selectedNodes:
                     node.translate(scaledDelta.x(), scaledDelta.y())
 
-            if node.isReroute() and modifiers == QtCore.Qt.AltModifier:
-                mouseRect = QtCore.QRect(QtCore.QPoint(event.pos().x() - 1, event.pos().y() - 1),
-                                         QtCore.QPoint(event.pos().x() + 1, event.pos().y() + 1))
-                hoverItems = self.items(mouseRect)
-                newOuts = []
-                newIns = []
-                for item in hoverItems:
-                    if isinstance(item, UIConnection):
-                        if list(node.UIinputs.values())[0].connections and list(node.UIoutputs.values())[0].connections:
-                            if item.source() == list(node.UIinputs.values())[0].connections[0].source():
-                                newOuts.append([item.destination(), item.drawDestination])
-                            if item.destination() == list(node.UIoutputs.values())[0].connections[0].destination():
-                                newIns.append([item.source(), item.drawSource])
-                for out in newOuts:
-                    self.connectPins(list(node.UIoutputs.values())[0], out[0])
-                for inp in newIns:
-                    self.connectPins(inp[0], list(node.UIinputs.values())[0])
+            if node is not None:
+                if node.isReroute() and modifiers == QtCore.Qt.AltModifier:
+                    mouseRect = QtCore.QRect(QtCore.QPoint(event.pos().x() - 1, event.pos().y() - 1),
+                                            QtCore.QPoint(event.pos().x() + 1, event.pos().y() + 1))
+                    hoverItems = self.items(mouseRect)
+                    newOuts = []
+                    newIns = []
+                    for item in hoverItems:
+                        if isinstance(item, UIConnection):
+                            if list(node.UIinputs.values())[0].connections and list(node.UIoutputs.values())[0].connections:
+                                if item.source() == list(node.UIinputs.values())[0].connections[0].source():
+                                    newOuts.append([item.destination(), item.drawDestination])
+                                if item.destination() == list(node.UIoutputs.values())[0].connections[0].destination():
+                                    newIns.append([item.source(), item.drawSource])
+                    for out in newOuts:
+                        self.connectPins(list(node.UIoutputs.values())[0], out[0])
+                    for inp in newIns:
+                        self.connectPins(inp[0], list(node.UIinputs.values())[0])
+            else:
+                pass
+
         elif self.manipulationMode == CanvasManipulationMode.PAN:
             self.pan(mouseDelta)
         elif self.manipulationMode == CanvasManipulationMode.ZOOM:

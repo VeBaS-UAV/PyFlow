@@ -28,6 +28,7 @@ from PyFlow.UI.Canvas.UINodeBase import getUINodeInstance
 from PyFlow.UI.Utils.stylesheet import editableStyleSheet
 from PyFlow.UI.Widgets.PropertiesFramework import CollapsibleFormWidget
 import PyFlow.UI.resources
+import traceback
 
 
 def run(filePath):
@@ -50,7 +51,8 @@ def run(filePath):
         prop.setWindowIcon(QtGui.QIcon(":/LogoBpApp.png"))
         # Initalize packages
         try:
-            INITIALIZE()
+            additional_path = ["/home/matthias/src/robinson/robinson_flow/robinson_flow/pyflow_nodes"]
+            INITIALIZE(additionalPackageLocations=additional_path)
             man = GraphManagerSingleton().get()
             man.deserialize(data)
             grph = man.findRootGraph()
@@ -99,6 +101,7 @@ def run(filePath):
                 msg.show()
 
         except Exception as e:
+            print(traceback.format_exc())
             msg.setText("Error reading Graph")
             msg.setInformativeText(filePath)
             msg.setDetailedText(str(e))

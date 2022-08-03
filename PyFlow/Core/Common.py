@@ -319,7 +319,8 @@ def canConnectPins(src, dst):
 
     if src.optionEnabled(PinOptions.AllowCycleConnection) is False and dst.optionEnabled(PinOptions.AllowCycleConnection) is False:
         if cycleCheck(src, dst):
-            return False
+            # return False
+            return True
 
     if src.isExec() and dst.isExec():
         return True
@@ -458,9 +459,10 @@ def connectPins(src, dst):
     src.aboutToConnect(dst)
 
     pinAffects(src, dst)
-    src.setDirty()
 
-    dst.setData(src.currentData())
+    if src.optionEnabled(PinOptions.UpdateDataOnConnect):
+        src.setDirty()
+        dst.setData(src.currentData())
 
     dst.pinConnected(src)
     src.pinConnected(dst)
@@ -779,6 +781,7 @@ class PinOptions(Flag):
 
     AffectsDirtyForward = auto() #: determined if dirty bit will be forwarded to affected pins
     AllowCycleConnection = auto() #: define
+    UpdateDataOnConnect = auto() #: define
 
 
 class StructureType(IntEnum):
